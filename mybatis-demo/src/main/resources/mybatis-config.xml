@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties>
+        <!-- 启用默认值特性 仅对setting、SQL中${}占位符有用 -->
+        <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true" />
+        <!-- 修改默认值的分隔符 -->
+        <property name="org.apache.ibatis.parsing.PropertyParser.default-value-separator" value="?:"/>
+    </properties>
+    <!-- 设置驼峰匹配 -->
+    <settings>
+        <!--是否开启二级缓存-->
+        <setting name="cacheEnabled" value="true"/>
+        <!--自动映射列到字段或属性的行为 PARTIAL 只会自动映射没有定义嵌套结果映射的字段-->
+        <setting name="autoMappingBehavior" value="PARTIAL"/>
+        <!--发现自动映射目标未知列（或未知属性类型）的行为 NONE: 不做任何反应-->
+        <setting name="autoMappingUnknownColumnBehavior" value="NONE"/>
+        <!--配置默认的执行器-->
+        <setting name="defaultExecutorType" value="SIMPLE"/>
+        <!--一级缓存 STATEMENT使一级缓存不起作用-->
+        <setting name="localCacheScope" value="STATEMENT"/>
+
+        <!--空值的默认 JDBC 类型-->
+        <setting name="jdbcTypeForNull" value="OTHER"/>
+        <!--指定 Enum 使用的默认TypeHandler -->
+        <setting name="defaultEnumTypeHandler" value="org.apache.ibatis.type.EnumTypeHandler"/>
+        <!--<setting name="defaultEnumTypeHandler" value="com.nestor.mybatisdemo.common.GenericEnumTypeHandler"/>-->
+        <!--非默认值，设置驼峰匹配-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!--控制台打印 可打印sql入参出参-->
+        <setting name="logImpl" value="STDOUT_LOGGING" />
+        <!--当返回行的所有列都是空时，MyBatis默认返回 null。 当开启这个设置时，MyBatis会返回一个空实例-->
+        <setting name="returnInstanceForEmptyRow" value="false" />
+    </settings>
+
+    <!-- 设置包扫描(别名) -->
+    <typeAliases>
+        <package name="com.nestor.mybatisdemo.po"/>
+    </typeAliases>
+
+    <!--定义类型处理器-->
+    <!--<typeHandlers>-->
+        <!--<typeHandler handler="com.nestor.mybatisdemo.anothertypehandler.BaseEnumTypeHandler"/>-->
+        <!--<package name="com.nestor.mybatisdemo.typehandler" />-->
+    <!--</typeHandlers>-->
+
+    <!--定义插件-->
+    <plugins>
+        <plugin interceptor="com.nestor.mybatisdemo.common.CustomMybatisInterceptor"></plugin>
+    </plugins>
+
+    <environments default="mysql">
+        <environment id="mysql">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver" />
+                <property name="url" value="jdbc:mysql://localhost:3306/mybatis-demo?useUniCode=true&amp;characterEncoding=utf-8&amp;serverTimezone=UTC" />
+                <property name="username" value="root" />
+                <property name="password" value="123456" />
+            </dataSource>
+        </environment>
+    </environments>
+
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="MySQL" value="mysql"/>
+        <property name="Oracle" value="oracle" />
+    </databaseIdProvider>
+
+    <!--使用自定义DatabaseIdProvider-->
+    <!--<databaseIdProvider type="com.nestor.mybatisdemo.common.CustomDatabaseIdProvider" />-->
+
+
+    <!--定义mapper XML文件路径-->
+    <mappers>
+        <!--<mapper resource="mapper/GradeParamMapper.xml" />-->
+        <!--查询class所在目录下的xml，无法配置在resources下的mapper xml-->
+        <!--<mapper class="com.nestor.mybatisdemo.mapper.StudentMapper" />-->
+        <!--<mapper class="com.nestor.mybatisdemo.mapper.SchoolMapper" />-->
+        <!--<mapper class="com.nestor.mybatisdemo.mapper.GradeParamMapper" />-->
+        <!--以下package方式仅适合mapper xml放在com.nestor.mybatisdemo.mapper包下，无法配置在resources下的mapper xml-->
+        <!--<package name="com.nestor.mybatisdemo.mapper" />-->
+    </mappers>
+
+</configuration>

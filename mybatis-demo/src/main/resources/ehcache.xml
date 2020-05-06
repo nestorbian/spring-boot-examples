@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="false" monitoring="autodetect"
+         dynamicConfig="true">
+
+    <!--指定数据在磁盘中的存储位置-->
+    <diskStore path="D:/ehcache"/>
+
+    <defaultCache
+            maxElementsInMemory="10000"
+            maxElementsOnDisk="10000000"
+            eternal="false"
+            overflowToDisk="true"
+            timeToIdleSeconds="120"
+            timeToLiveSeconds="120"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU"
+            diskPersistent="true">
+    </defaultCache>
+
+
+    <cache  name="com.nestor.mybatisdemo.mapper.SchoolMapper"
+            maxElementsInMemory="3000"
+            eternal="false"
+            copyOnRead="true"
+            copyOnWrite="true"
+            timeToIdleSeconds="3600"
+            timeToLiveSeconds="3600"
+            overflowToDisk="true"
+            diskPersistent="true"/>
+</ehcache>

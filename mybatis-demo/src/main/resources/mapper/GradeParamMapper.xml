@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nestor.mybatisdemo.mapper.GradeParamMapper">
+
+    <cache eviction="LRU" blocking="false" flushInterval="180000" size="2048" />
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache" />-->
+    <!--<cache type="org.mybatis.caches.redis.RedisCache" />-->
+
+    <sql id="columns">
+      id, name, manager_name, level, create_time, update_time
+    </sql>
+
+    <resultMap id="LevelResultMap" type="GradeParam">
+        <result column="level" property="level" typeHandler="com.nestor.mybatisdemo.anothertypehandler.BaseEnumTypeHandler" />
+    </resultMap>
+
+    <select id="selectByNameAndLevel" resultType="GradeParam">
+      select
+      <include refid="columns" />
+      from grade_param
+      where name = #{param1,jdbcType=VARCHAR} and level = #{param2,jdbcType=TINYINT}
+    </select>
+
+    <select id="listWithFetchSize" resultType="GradeParam" fetchSize="50">
+        select
+        <include refid="columns" />
+        from grade_param
+    </select>
+
+    <insert id="insertOne" parameterType="GradeParam">
+      insert into grade_param(name, manager_name, level)
+      value(#{name,jdbcType=VARCHAR}, #{managerName,jdbcType=VARCHAR}, #{level,jdbcType=TINYINT})
+      <selectKey keyProperty="id" keyColumn="id" resultType="long" order="AFTER">
+          select last_insert_id()
+      </selectKey>
+    </insert>
+
+</mapper>

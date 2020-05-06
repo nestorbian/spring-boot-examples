@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nestor.mybatisdemo.mapper.SchoolMapper">
+
+    <!--<cache-ref namespace="com.nestor.mybatisdemo.mapper.GradeParamMapper" />-->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+
+    <sql id="name_equals">
+        name = ${schoolName}
+    </sql>
+
+    <sql id="name_and_address">
+        name = #{name,jdbcType=VARCHAR} and address = #{address,jdbcType=VARCHAR}
+    </sql>
+    <!--不支持 <sql id="name_and_address">-->
+        <!--name = #{schoolName,jdbcType=VARCHAR} and address = #{address,jdbcType=VARCHAR}-->
+    <!--</sql>-->
+
+    <select id="listByInclude1" resultType="School">
+        select * from school where
+        <include refid="name_equals">
+            <property name="schoolName" value="#{name,jdbcType=VARCHAR}"/>
+        </include>
+    </select>
+
+    <select id="listByInclude2" resultType="School" flushCache="true">
+        select * from school where
+        <include refid="name_and_address" />
+    </select>
+
+    <!--<select id="listByInclude2" resultType="School">-->
+        <!--select * from school where-->
+        <!--<include refid="name_and_address">-->
+            <!--<property name="schoolName" value="#{name,jdbcType=VARCHAR}" />-->
+        <!--</include>-->
+    <!--</select>-->
+
+    <resultMap id="SchoolResultMap" type="School">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="address" property="address" />
+        <result column="build_date" property="buildDate" />
+        <result column="description" property="description" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <select id="selectById" resultMap="SchoolResultMap">
+        select id, name, address, build_date, description, create_time, update_time from school where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <resultMap id="ConstructorResultMap" type="School">
+        <constructor>
+            <idArg column="id" name="id" />
+            <arg column="name" name="name" />
+            <arg column="address" name="address" />
+        </constructor>
+    </resultMap>
+
+    <select id="selectByIdWithConstructor" resultMap="ConstructorResultMap">
+        select id, name, address, build_date, description, create_time, update_time from school where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <resultMap id="SchoolWithMoreResultSetResultMap" type="com.nestor.mybatisdemo.dto.SchoolDTO">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="address" property="address" />
+        <result column="build_date" property="buildDate" />
+        <result column="description" property="description" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <collection property="students" ofType="Student" resultSet="students" column="id" foreignColumn="school_id" />
+    </resultMap>
+
+    <select id="selectSchoolWithMoreResultSet" resultSets="school,students" resultMap="SchoolWithMoreResultSetResultMap" statementType="CALLABLE">
+        {call school_procedure(#{id,mode=IN,jdbcType=BIGINT})}
+    </select>
+
+    <!--不支持报错-->
+    <select id="moreSelect" resultSets="school,students" resultMap="SchoolWithMoreResultSetResultMap">
+      	select * from school where id = #{id,jdbcType=BIGINT};
+        select * from student where school_id = #{id,jdbcType=BIGINT};
+    </select>
+
+</mapper>

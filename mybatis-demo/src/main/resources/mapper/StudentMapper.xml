@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nestor.mybatisdemo.mapper.StudentMapper">
+
+    <insert id="insertOne" useGeneratedKeys="true" keyProperty="id" parameterType="Student">
+        insert into student(name, age, sex, school_id, enter_score)
+        value (#{name,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR},
+        #{schoolId,jdbcType=BIGINT}, #{enterScore,jdbcType=NUMERIC,numericScale=1})
+    </insert>
+
+    <resultMap id="StudentResultMap" type="Student">
+    </resultMap>
+
+    <select id="callProcedure" resultMap="StudentResultMap" statementType="CALLABLE">
+        call student_procedure(#{id,mode=IN,jdbcType=BIGINT}, #{enterScore,mode=OUT,jdbcType=DECIMAL})
+    </select>
+
+    <resultMap id="StudentWithSchoolResultMap" type="com.nestor.mybatisdemo.dto.StudentDTO">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="age" column="age"/>
+        <result property="sex" column="sex"/>
+        <result property="enterScore" column="enter_score"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <association property="school" javaType="School" column="school_id" select="com.nestor.mybatisdemo.mapper.SchoolMapper.selectById" />
+    </resultMap>
+
+    <!--嵌套关联查询-->
+    <select id="selectStudentWithSchool" resultMap="StudentWithSchoolResultMap">
+      select id, name, age, sex, enter_score, create_time, update_time, school_id from student
+    </select>
+
+    <resultMap id="StudentWithColumnPrefixResultMap" type="com.nestor.mybatisdemo.dto.StudentDTO" autoMapping="true">
+        <association property="school" javaType="School" resultMap="com.nestor.mybatisdemo.mapper.SchoolMapper.SchoolResultMap" columnPrefix="s_"/>
+    </resultMap>
+
+    <!--列名不能重复否则会发生非预期映射-->
+    <select id="selectStudentWithColumnPrefix" resultMap="StudentWithColumnPrefixResultMap" databaseId="mysql">
+        select s1.id, s1.name, s1.age, s1.sex, s1.enter_score, s1.create_time, s1.update_time,
+        s2.id as s_id, s2.name as s_name, s2.address as s_address, s2.build_date as s_build_date,
+        s2.description as s_description, s2.create_time as s_create_time, s2.update_time as s_update_time
+        from student s1
+        inner join school s2 on s1.school_id = s2.id
+    </select>
+
+
+    <resultMap id="StudentWithDiscriminatorResultMap" type="Student">
+        <discriminator javaType="string" column="sex">
+            <case value="M" resultType="com.nestor.mybatisdemo.dto.ScienceStudent" />
+            <case value="F" resultType="com.nestor.mybatisdemo.dto.LiberalArtStudent" />
+        </discriminator>
+    </resultMap>
+
+    <!--鉴别器-->
+    <select id="selectStudentWithDiscriminator" resultMap="StudentWithDiscriminatorResultMap" databaseId="mysql">
+        select id, name, age, sex, enter_score, create_time, update_time, school_id from student
+    </select>
+
+</mapper>
