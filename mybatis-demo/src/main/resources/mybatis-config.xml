@@ -18,7 +18,7 @@
         <!--配置默认的执行器-->
         <setting name="defaultExecutorType" value="SIMPLE"/>
         <!--一级缓存 STATEMENT使一级缓存不起作用-->
-        <setting name="localCacheScope" value="STATEMENT"/>
+        <setting name="localCacheScope" value="SESSION"/>
 
         <!--空值的默认 JDBC 类型-->
         <setting name="jdbcTypeForNull" value="OTHER"/>

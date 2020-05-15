@@ -69,4 +69,9 @@ public class StudentServiceImpl implements StudentService {
     public int updateStduentSelective(Student student) {
         return studentMapper.updateStduentSelective(student);
     }
+
+    @Override
+    public int deleteStudentSelective(String name, Integer age) {
+        return studentMapper.deleteStudentSelective(name, age);
+    }
 }

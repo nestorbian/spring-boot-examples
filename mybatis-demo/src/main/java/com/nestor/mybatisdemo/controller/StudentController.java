@@ -4,11 +4,13 @@ import com.nestor.mybatisdemo.dto.StudentDTO;
 import com.nestor.mybatisdemo.po.Student;
 import com.nestor.mybatisdemo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -131,9 +133,31 @@ public class StudentController {
         return studentService.selectStudentWithSchoolUseAnnotation();
     }
 
+    /**
+     * 验证通过注解实现动态更新
+     *
+     * @param student
+     * @return java.lang.String
+     * @date : 2020/5/15 18:28
+     * @author : Nestor.Bian
+     * @since : 1.0
+     */
     @PatchMapping("/student-selective")
     public String updateStduentSelective(@RequestBody Student student) {
         studentService.updateStduentSelective(student);
+        return "SUCCESS";
+    }
+
+    /**
+     * 验证通过注解实现动态删除
+     * @param name
+     * @param age
+     * @return
+     */
+    @DeleteMapping("/student-selective")
+    public String deleteStudentSelective(@RequestParam(required = false) String name,
+                                         @RequestParam(required = false) Integer age) {
+        studentService.deleteStudentSelective(name, age);
         return "SUCCESS";
     }
 }

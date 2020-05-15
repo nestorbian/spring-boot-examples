@@ -1,0 +1,32 @@
+DELETE http://localhost:8080/mybatis-demo/student-selective?name=xiaoliu
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-05-15T064555.200.txt
+
+###
+
+DELETE http://localhost:8080/mybatis-demo/student-selective?name=xiaoliu
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-05-15T064431.500.json
+
+###
+
+DELETE http://localhost:8080/mybatis-demo/student-selective?name=xiaoliu
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-05-15T064107.200.txt
+
+###
+
+DELETE http://localhost:8080/mybatis-demo/student-selective?name=xiaoliu
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-05-15T063957.200.txt
+
+###
+

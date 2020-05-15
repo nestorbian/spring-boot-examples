@@ -3,8 +3,11 @@ package com.nestor.mybatisdemo.mapper;
 import com.nestor.mybatisdemo.dto.StudentDTO;
 import com.nestor.mybatisdemo.po.Student;
 import com.nestor.mybatisdemo.provider.DynamicSqlProvider;
+import com.nestor.mybatisdemo.provider.SqlProviderMethodResolver;
+import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.One;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -39,7 +42,10 @@ public interface StudentMapper {
     @One(select = "com.nestor.mybatisdemo.mapper.SchoolMapper.selectById"))})
     List<StudentDTO> selectStudentWithSchoolUseAnnotation();
 
-    @UpdateProvider(DynamicSqlProvider.class)
+    @UpdateProvider(SqlProviderMethodResolver.class)
     int updateStduentSelective(Student student);
+
+    @DeleteProvider(type = DynamicSqlProvider.class, method = "deleteStudentSelective")
+    int deleteStudentSelective(@Param("name") String name1, @Param("age") Integer age1);
 
 }

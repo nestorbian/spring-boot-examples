@@ -2,6 +2,7 @@ package com.nestor.mybatisdemo.service;
 
 import com.nestor.mybatisdemo.dto.StudentDTO;
 import com.nestor.mybatisdemo.po.Student;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,4 +22,6 @@ public interface StudentService {
     List<StudentDTO> selectStudentWithSchoolUseAnnotation();
 
     int updateStduentSelective(Student student);
+
+    int deleteStudentSelective(String name, Integer age);
 }

@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.nestorbian.jackson</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>jackson-full-config</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>jackson-full-config</name>
     <description>Jackson full config</description>
