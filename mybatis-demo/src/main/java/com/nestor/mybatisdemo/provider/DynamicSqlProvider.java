@@ -1,6 +1,5 @@
 package com.nestor.mybatisdemo.provider;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
