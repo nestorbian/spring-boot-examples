@@ -39,10 +39,10 @@
     </typeAliases>
 
     <!--定义类型处理器-->
-    <!--<typeHandlers>-->
-        <!--<typeHandler handler="com.nestor.mybatisdemo.anothertypehandler.BaseEnumTypeHandler"/>-->
-        <!--<package name="com.nestor.mybatisdemo.typehandler" />-->
-    <!--</typeHandlers>-->
+    <typeHandlers>
+        <typeHandler handler="com.nestor.mybatisdemo.anothertypehandler.BaseEnumTypeHandler"/>
+        <package name="com.nestor.mybatisdemo.typehandler" />
+    </typeHandlers>
 
     <!--定义插件-->
     <plugins>
