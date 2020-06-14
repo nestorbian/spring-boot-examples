@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+    <properties resource="mybatis-generator.properties" />
+    <classPathEntry location="${driverLocation}"/>
+
+    <!-- context 是逆向工程的主要配置信息 id：起个名字 targetRuntime：设置生成的文件适用于那个 mybatis 版本 -->
+    <context id="default" targetRuntime="MyBatis3" defaultModelType="conditional">
+
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <!--<plugin type="org.mybatis.generator.plugins.FluentBuilderMethodsPlugin"/>-->
+        <!--<plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>-->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <!--<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>-->
+        <!--不合并 mapper.xml，直接覆盖，不加的话多次执行会生成重复的xml语句-->
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin" />
+        <plugin type="com.nestor.mybatisgeneratordemo.common.MyToStringPlugin" />
+        <plugin type="com.nestor.mybatisgeneratordemo.common.BaseMapperGeneratorPlugin">
+            <property name="baseMapper" value="com.nestor.mybatisgeneratordemo.mapper.BaseMapper" />
+        </plugin>
+
+        <!-- 指在创建class时，对注释进行控制-->
+        <commentGenerator type="com.nestor.mybatisgeneratordemo.common.MyCommentGenerator">
+            <property name="suppressDate" value="true"/>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="false"/>
+            <property name="addRemarkComments" value="true"/>
+        </commentGenerator>
+        <!--jdbc的数据库连接为数据库名字-->
+        <jdbcConnection driverClass="${driverClass}"
+                        connectionURL="${connectionURL}"
+                        userId="${userId}"
+                        password="${password}">
+            <!--指定使用数据库连接里的库信息-->
+            <property name="nullCatalogMeansCurrent" value="true"/>
+        </jdbcConnection>
+        <!--非必须，类型处理器，在数据库类型和java类型之间的转换控制-->
+        <javaTypeResolver>
+            <!-- 指定数据库中的decimal,numeric在Java对应是BigDecimal 类 -->
+            <property name="forceBigDecimals" value="true"/>
+            <property name="useJSR310Types" value="true"/>
+        </javaTypeResolver>
+        <!-- targetPackage：生成的实体类所在的包 -->
+        <!-- targetProject：生成的实体类所在的硬盘位置 -->
+        <javaModelGenerator targetPackage="com.nestor.mybatisgeneratordemo.po"
+                            targetProject="${baseTargetProject}/src/main/java">
+            <!-- 是否允许子包 -->
+            <property name="enableSubPackages" value="false"/>
+            <!-- 是否对modal添加构造函数 -->
+            <property name="constructorBased" value="false"/>
+            <!-- 是否清理从数据库中查询出的字符串左右两边的空白字符 -->
+            <property name="trimStrings" value="true"/>
+            <!-- 建立modal对象是否不可改变 即生成的modal对象不会有setter方法，只有构造方法 -->
+            <property name="immutable" value="false"/>
+            <property name="rootClass" value="com.nestor.mybatisgeneratordemo.po.BaseModel"/>
+        </javaModelGenerator>
+        <!-- targetPackage 和 targetProject：生成的 mapper 文件的包和位置 -->
+        <sqlMapGenerator targetPackage="mapper"
+                         targetProject="${baseTargetProject}/src/main/resources">
+            <!-- 针对数据库的一个配置，是否把 schema 作为字包名 -->
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+        <!-- targetPackage 和 targetProject：生成的 interface 文件的包和位置 -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.nestor.mybatisgeneratordemo.mapper"
+                             targetProject="${baseTargetProject}/src/main/java">
+            <!-- 针对 oracle 数据库的一个配置，是否把 schema 作为字包名 -->
+            <property name="enableSubPackages" value="false"/>
+            <!--<property name="rootInterface" value="com.nestor.mybatisgeneratordemo.mapper.BaseMapper"/>-->
+        </javaClientGenerator>
+        <!-- tableName是数据库中的表名，domainObjectName是生成的JAVA模型名，后面的参数不用改，要生成更多的表就在下面继续加table标签 -->
+        <!--<table tableName="%" schema="root">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true" type="post"/>-->
+        <!--</table>-->
+        <table tableName="grade_param" domainObjectName="GradeParam">
+            <generatedKey column="id" sqlStatement="MySql" identity="true" type="post"/>
+            <columnOverride column="level" javaType="com.nestor.mybatisgeneratordemo.enums.GradeLevel"/>
+        </table>
+        <table tableName="student" domainObjectName="Student">
+            <generatedKey column="id" sqlStatement="MySql" identity="true" type="post"/>
+            <columnOverride column="sex" javaType="com.nestor.mybatisgeneratordemo.enums.Sex"/>
+        </table>
+        <table tableName="school" domainObjectName="School">
+            <generatedKey column="id" sqlStatement="MySql" identity="true" type="post"/>
+        </table>
+    </context>
+</generatorConfiguration>
