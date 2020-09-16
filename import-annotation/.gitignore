@@ -29,3 +29,5 @@ build/
 ### VS Code ###
 .vscode/
 /.mvn/
+/import-annotation/mvnw.cmd
+/import-annotation/mvnw
