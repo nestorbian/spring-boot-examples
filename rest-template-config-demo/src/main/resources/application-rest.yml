@@ -1,0 +1,14 @@
+rest:
+  buffer-request-body: true
+  max-idle-time: 30
+  #TTL
+  time-to-live: 30
+  #线程池最大线程数
+  max-total-threads: 100
+  #每个route下的最大线程数
+  max-per-route-threads: 10
+  socket-timeout: 5000
+  connect-timeout: 2000
+  connection-request-timeout: 500
+  #重试次数
+  retry-count: 0
