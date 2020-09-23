@@ -103,30 +103,31 @@ public class RestTemplateConfig {
 	@Bean
 	public HttpRequestRetryHandler getHttpRequestRetryHandler() {
 		return (exception, executionCount, context) -> {
-			if (executionCount >= restTemplateProperties.getRetryCount()) {
+			if (executionCount >= restTemplateProperties.getRetryCount()) { // 在配置的超时时间内，如果重试了N次，就放弃
 				return false;
 			}
-			if (exception instanceof NoHttpResponseException) {
+			if (exception instanceof NoHttpResponseException) { // 如果服务器丢掉了连接，那么就重试
 				return true;
 			}
-			if (exception instanceof SSLHandshakeException) {
+			if (exception instanceof SSLHandshakeException) { // 不要重试SSL握手异常
 				return false;
 			}
-			if (exception instanceof InterruptedIOException) {
+			if (exception instanceof InterruptedIOException) { // 超时
 				return false;
 			}
-			if (exception instanceof UnknownHostException) {
+			if (exception instanceof UnknownHostException) { // 目标服务器不可达
 				return false;
 			}
-			if (exception instanceof ConnectTimeoutException) {
+			if (exception instanceof ConnectTimeoutException) { // 连接被拒绝
 				return false;
 			}
-			if (exception instanceof SSLException) {
+			if (exception instanceof SSLException) { // SSL握手异常
 				return false;
 			}
 
 			HttpClientContext clientContext = HttpClientContext.adapt(context);
 			HttpRequest request = clientContext.getRequest();
+			// 如果请求是幂等，就再次重试
 			return request instanceof HttpEntityEnclosingRequest;
 		};
 	}
