@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nestor.mybatisdemo.mapper.GradeParamMapper">
 
-    <cache eviction="LRU" blocking="false" flushInterval="180000" size="2048" />
+    <cache eviction="LRU" blocking="false" flushInterval="180000" size="2048" readOnly="false" />
     <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache" />-->
     <!--<cache type="org.mybatis.caches.redis.RedisCache" />-->
 
