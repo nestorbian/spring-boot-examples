@@ -7,8 +7,6 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
 
-import com.nestor.resttemplateconfigdemo.support.CustomResponseErrorHandler;
-import com.nestor.resttemplateconfigdemo.support.RestTemplateProperties;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;
 import org.apache.http.NoHttpResponseException;
@@ -29,7 +27,9 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 import com.nestor.resttemplateconfigdemo.support.CustomConnectionKeepAliveStrategy;
+import com.nestor.resttemplateconfigdemo.support.CustomResponseErrorHandler;
 import com.nestor.resttemplateconfigdemo.support.RestTemplateLogInterceptor;
+import com.nestor.resttemplateconfigdemo.support.RestTemplateProperties;
 
 /**
  * 自定义的RestTemplate配置类 restTemplate

@@ -8,8 +8,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @EnableConfigurationProperties
 public class RestTemplateConfigDemoApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(RestTemplateConfigDemoApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(RestTemplateConfigDemoApplication.class, args);
+	}
 
 }

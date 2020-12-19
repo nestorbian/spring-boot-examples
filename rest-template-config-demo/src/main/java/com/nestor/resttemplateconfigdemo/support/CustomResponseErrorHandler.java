@@ -10,7 +10,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
@@ -45,13 +44,13 @@ public class CustomResponseErrorHandler extends DefaultResponseErrorHandler {
 	 */
 	@Override
 	public boolean hasError(ClientHttpResponse response) throws IOException {
-        int rawStatusCode = response.getRawStatusCode();
-        HttpStatus statusCode = HttpStatus.resolve(rawStatusCode);
+		int rawStatusCode = response.getRawStatusCode();
+		HttpStatus statusCode = HttpStatus.resolve(rawStatusCode);
 
-        if (Objects.isNull(statusCode)) {
-            HttpStatus.Series series = HttpStatus.Series.resolve(rawStatusCode);
-            return Objects.isNull(series);
-        }
+		if (Objects.isNull(statusCode)) {
+			HttpStatus.Series series = HttpStatus.Series.resolve(rawStatusCode);
+			return Objects.isNull(series);
+		}
 
 		return false;
 	}
@@ -69,10 +68,9 @@ public class CustomResponseErrorHandler extends DefaultResponseErrorHandler {
 	@Override
 	public void handleError(ClientHttpResponse response) throws IOException {
 		byte[] body = getResponseBody(response);
-		String message = getErrorMessage(response.getRawStatusCode(),
-				response.getStatusText(), body, getCharset(response));
-		throw new UnknownHttpStatusCodeException(message,
-				response.getRawStatusCode(), response.getStatusText(),
+		String message = getErrorMessage(response.getRawStatusCode(), response.getStatusText(), body,
+				getCharset(response));
+		throw new UnknownHttpStatusCodeException(message, response.getRawStatusCode(), response.getStatusText(),
 				response.getHeaders(), body, getCharset(response));
 	}
 
@@ -94,11 +92,11 @@ public class CustomResponseErrorHandler extends DefaultResponseErrorHandler {
 	public void handleError(URI url, HttpMethod method, ClientHttpResponse response) throws IOException {
 		log.warn("restTemplate异常处理: 下游服务器发生错误, url:[{}], method:[{}], http状态码:[{}]", url.getPath(), method.name(),
 				response.getRawStatusCode());
-        handleError(response);
+		handleError(response);
 	}
 
-	private String getErrorMessage(
-			int rawStatusCode, String statusText, @Nullable byte[] responseBody, @Nullable Charset charset) {
+	private String getErrorMessage(int rawStatusCode, String statusText, @Nullable byte[] responseBody,
+			@Nullable Charset charset) {
 
 		String preface = rawStatusCode + " " + statusText + ": ";
 		if (ObjectUtils.isEmpty(responseBody)) {
@@ -119,8 +117,7 @@ public class CustomResponseErrorHandler extends DefaultResponseErrorHandler {
 			reader.close();
 			buffer.flip();
 			return preface + "[" + buffer.toString() + "... (" + responseBody.length + " bytes)]";
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			// should never happen
 			throw new IllegalStateException(ex);
 		}
