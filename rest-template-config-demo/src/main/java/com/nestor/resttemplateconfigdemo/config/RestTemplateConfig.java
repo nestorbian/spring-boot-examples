@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
 
+import com.nestor.resttemplateconfigdemo.support.CustomResponseErrorHandler;
 import com.nestor.resttemplateconfigdemo.support.RestTemplateProperties;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;
@@ -31,7 +32,7 @@ import com.nestor.resttemplateconfigdemo.support.CustomConnectionKeepAliveStrate
 import com.nestor.resttemplateconfigdemo.support.RestTemplateLogInterceptor;
 
 /**
- * 自定义的RestTemplate配置类
+ * 自定义的RestTemplate配置类 restTemplate
  *
  * @author : Nestor.Bian
  * @version : V 1.0
@@ -46,9 +47,20 @@ public class RestTemplateConfig {
 	@Bean
 	public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder,
 			ClientHttpRequestFactory clientHttpRequestFactory, RestTemplateLogInterceptor logInterceptor) {
-		return restTemplateBuilder.requestFactory(() -> clientHttpRequestFactory).interceptors(logInterceptor).build();
+		// 添加自定义ResponseErrorHandler，防止4xx,5xx抛出异常
+		return restTemplateBuilder.requestFactory(() -> clientHttpRequestFactory).interceptors(
+				logInterceptor).errorHandler(new CustomResponseErrorHandler()).build();
 	}
 
+	/**
+	 * 配置client请求工厂
+	 *
+	 * @param httpClient
+	 * @return org.springframework.http.client.HttpComponentsClientHttpRequestFactory
+	 * @date : 2020/12/19 14:10
+	 * @author : Nestor.Bian
+	 * @since : 1.0
+	 */
 	@Bean
 	public HttpComponentsClientHttpRequestFactory clientHttpRequestFactory(HttpClient httpClient) {
 		HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(
@@ -81,6 +93,15 @@ public class RestTemplateConfig {
 		return httpClientBuilder.setKeepAliveStrategy(new CustomConnectionKeepAliveStrategy()).build();
 	}
 
+	/**
+	 * 配置连接池
+	 *
+	 * @param
+	 * @return org.apache.http.impl.conn.PoolingHttpClientConnectionManager
+	 * @date : 2020/12/19 13:53
+	 * @author : Nestor.Bian
+	 * @since : 1.0
+	 */
 	@Bean
 	public PoolingHttpClientConnectionManager connectionManager() {
 		PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(
@@ -92,6 +113,15 @@ public class RestTemplateConfig {
 		return connectionManager;
 	}
 
+	/**
+	 * 自定义的配置
+	 *
+	 * @param
+	 * @return org.apache.http.client.config.RequestConfig
+	 * @date : 2020/12/19 13:54
+	 * @author : Nestor.Bian
+	 * @since : 1.0
+	 */
 	@Bean
 	public RequestConfig requestConfig() {
 		// socketTimeout=readTimeout
@@ -100,6 +130,15 @@ public class RestTemplateConfig {
 						restTemplateProperties.getConnectionRequestTimeout()).build();
 	}
 
+	/**
+	 * 请求重试
+	 *
+	 * @param
+	 * @return org.apache.http.client.HttpRequestRetryHandler
+	 * @date : 2020/12/19 13:54
+	 * @author : Nestor.Bian
+	 * @since : 1.0
+	 */
 	@Bean
 	public HttpRequestRetryHandler getHttpRequestRetryHandler() {
 		return (exception, executionCount, context) -> {

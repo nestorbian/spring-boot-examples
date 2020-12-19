@@ -1,14 +1,27 @@
 package com.nestor.resttemplateconfigdemo.support;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.support.HttpRequestWrapper;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StreamUtils;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * RestTemplate的日志打印拦截器
@@ -20,6 +33,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 public class RestTemplateLogInterceptor implements ClientHttpRequestInterceptor {
+
 	/**
 	 * Intercept the given request, and return a response. The given {@link ClientHttpRequestExecution} allows the
 	 * interceptor to pass on the request and response to the next entity in the chain.
@@ -56,9 +70,11 @@ public class RestTemplateLogInterceptor implements ClientHttpRequestInterceptor 
 
 		ClientHttpResponse httpResponse = execution.execute(request, body);
 
+		/* 生产环境不打印响应体 */
         log.info("restTemplate接收http响应, http状态码:[{}], 响应头:[{}], 响应体:[{}]", httpResponse.getRawStatusCode(),
-                httpResponse.getHeaders(), httpResponse.getBody());
+                httpResponse.getHeaders(), "");
 
 		return httpResponse;
 	}
+
 }
