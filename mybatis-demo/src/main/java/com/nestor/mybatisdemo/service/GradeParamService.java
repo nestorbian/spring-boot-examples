@@ -13,4 +13,7 @@ public interface GradeParamService {
 
     List<GradeParam> listWithFetchSize();
 
+    List<GradeParam> listWithStreaming();
+
+    List<GradeParam> selectByNameLike(String name);
 }

@@ -22,6 +22,12 @@
             <property name="schoolName" value="#{name,jdbcType=VARCHAR}"/>
         </include>
     </select>
+    <!--传入整数常量<include refid="name_equals">-->
+        <!--<property name="schoolName" value="1"/>-->
+    <!--</include>-->
+    <!--传入字符串常量<include refid="name_equals">-->
+    <!--<property name="schoolName" value="'1'"/>-->
+    <!--</include>-->
 
     <select id="listByInclude2" resultType="School" flushCache="true">
         select * from school where

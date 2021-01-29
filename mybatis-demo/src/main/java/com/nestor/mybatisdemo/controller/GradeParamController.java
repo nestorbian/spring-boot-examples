@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 年级controller
@@ -28,10 +31,16 @@ public class GradeParamController {
     @Autowired
     private GradeParamService gradeParamService;
 
-
     @GetMapping(path = "/grade-params/{name}/{level}")
     public GradeParam selectByNameAndLevel(@PathVariable String name, @PathVariable Integer level) {
         return gradeParamService.selectByNameAndLevel(name, EnumUtil.getByCode(level, GradeLevel.class));
+    }
+
+    @GetMapping(path = "/grade-params/like")
+    public List<GradeParam> selectByNameLike(@RequestParam String name, @RequestBody GradeParam gradeParam) {
+        System.err.println(gradeParam);
+        // return gradeParamService.selectByNameLike(name);
+        return Arrays.asList(gradeParam);
     }
 
     @GetMapping(path = "/grade-params")
@@ -40,9 +49,24 @@ public class GradeParamController {
     }
 
     @PostMapping(path = "/grade-param")
-    public GradeParam insertOne(@RequestBody GradeParam gradeParam) {
-        gradeParamService.insertOne(gradeParam);
+    public GradeParam insertOne(GradeParam gradeParam) {
+        System.err.println(gradeParam);
+        // gradeParamService.insertOne(gradeParam);
         return gradeParam;
     }
 
+
+    /**
+     * 流式查询
+     *
+     * @param
+     * @return java.util.List<com.nestor.mybatisdemo.po.GradeParam>
+     * @date : 2021/1/14 21:28
+     * @author : Nestor.Bian
+     * @since : 1.0
+     */
+    @GetMapping(path = "/grade-params/streaming")
+    public List<GradeParam> listWithStreaming() {
+        return gradeParamService.listWithStreaming();
+    }
 }

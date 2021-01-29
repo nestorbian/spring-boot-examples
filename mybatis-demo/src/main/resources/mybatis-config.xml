@@ -49,8 +49,9 @@
         <plugin interceptor="com.nestor.mybatisdemo.common.CustomMybatisInterceptor"></plugin>
     </plugins>
 
-    <environments default="mysql">
-        <environment id="mysql">
+    <!--多环境配置并不是多数据源，只能用default指定一个环境,但是可以让SQL做到多环境兼容-->
+    <environments default="dev">
+        <environment id="dev">
             <transactionManager type="JDBC" />
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.cj.jdbc.Driver" />
@@ -59,8 +60,18 @@
                 <property name="password" value="123456" />
             </dataSource>
         </environment>
+        <environment id="prod">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver" />
+                <property name="url" value="jdbc:mysql://localhost:3306/prod-demo?useUniCode=true&amp;characterEncoding=utf-8&amp;serverTimezone=UTC" />
+                <property name="username" value="root" />
+                <property name="password" value="123456" />
+            </dataSource>
+        </environment>
     </environments>
 
+    <!--给数据库厂商取别名 方便mapper xml中datasourceId指定，优执行mapper xml语句中datasourceId=当前数据源的别名的语句，其次是不带datasourceId的语句-->
     <databaseIdProvider type="DB_VENDOR">
         <property name="MySQL" value="mysql"/>
         <property name="Oracle" value="oracle" />

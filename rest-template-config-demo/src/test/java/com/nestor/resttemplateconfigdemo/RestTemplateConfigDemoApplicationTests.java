@@ -1,11 +1,14 @@
 package com.nestor.resttemplateconfigdemo;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +17,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
@@ -49,6 +56,8 @@ class RestTemplateConfigDemoApplicationTests {
 	@Test
 	public void getMethodUsingRestTemplateTest() {
 		try {
+			// URI uri = new URIBuilder("http://127.0.0.1:8080/mybatis-demo/grade-params/{name}/{level}").addParameter(
+			// "name", "1").addParameter("level", "1").build();
 			URI uri = UriComponentsBuilder.fromUriString(
 					"http://127.0.0.1:8080/mybatis-demo/grade-params/{name}/{level}").build("1", "1");
 			ResponseEntity<String> exchange = restTemplate.exchange(uri, HttpMethod.GET, HttpEntity.EMPTY,
@@ -85,6 +94,53 @@ class RestTemplateConfigDemoApplicationTests {
 			// 超时走这里
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 测试Http GET请求是否可以添加JSON请求体:不支持
+	 * 但是postman是支持的
+	 *
+	 * @param
+	 * @return void
+	 * @date : 2021/1/20 22:38
+	 * @author : Nestor.Bian
+	 * @since : 1.0
+	 */
+	@Test
+	public void getMethodTest() {
+		HashMap<String, Object> hashMap = new HashMap<>(8);
+		hashMap.put("name", "1");
+		URI uri = UriComponentsBuilder.fromUriString(
+				"http://127.0.0.1:8080/mybatis-demo/grade-params/like?name={name}").build().expand(hashMap).toUri();
+		MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
+		multiValueMap.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(hashMap, multiValueMap);
+		ResponseEntity<String> exchange = restTemplate.exchange(uri, HttpMethod.GET, httpEntity, String.class);
+		System.err.println(exchange.getBody());
+	}
+
+	/**
+	 * post表单请求
+	 * 请求体需要使用MultiValueMap
+	 *
+	 * @param
+	 * @return void
+	 * @date : 2021/1/20 22:57
+	 * @author : Nestor.Bian
+	 * @since : 1.0
+	 */
+	@Test
+	public void postMethodWithFormTest() {
+		MultiValueMap<String, Object> valueMap = new LinkedMultiValueMap<>(8);
+		valueMap.add("name", "1");
+		URI uri = UriComponentsBuilder.fromUriString(
+				"http://127.0.0.1:8080/mybatis-demo/grade-param").build().toUri();
+		MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
+		// multiValueMap.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+		// HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(valueMap, multiValueMap);
+		// ResponseEntity<String> exchange = restTemplate.exchange(uri, HttpMethod.POST, httpEntity, String.class);
+		ResponseEntity<String> exchange = restTemplate.postForEntity(uri, valueMap, String.class);
+		System.err.println(exchange.getBody());
 	}
 
 }

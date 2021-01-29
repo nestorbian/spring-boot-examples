@@ -1,3 +1,33 @@
+GET http://localhost:8080/spring-cache-redis-demo/grade-params/6?name=xiaoliu
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-12-31T064837.200.json
+
+###
+
+GET http://localhost:8080/spring-cache-redis-demo/grade-params/6?name=xiaoliu
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-12-31T064221.200.json
+
+###
+
+GET http://localhost:8080/spring-cache-redis-demo/grade-params/6?name=xiaoliu
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-12-31T055421.200.json
+
+###
+
+GET http://localhost:8080/spring-cache-redis-demo/grade-params/1?name=xiaoliu
+Accept: */*
+Cache-Control: no-cache
+
+###
+
 DELETE http://localhost:8080/mybatis-demo/student-selective?name=xiaoliu
 Accept: */*
 Cache-Control: no-cache
