@@ -23,8 +23,10 @@ class CourseParamRepositoryImplTest {
 
     @Test
     void getById() {
-        CourseParam byId = courseParamRepository.getById(3L);
+        CourseParam byId = courseParamRepository.getById(1L);
         log.info(byId.toString());
+        // byId = courseParamRepository.getById(1L);
+        // log.info(byId.toString());
     }
 
     @Test
@@ -43,5 +45,17 @@ class CourseParamRepositoryImplTest {
 
     @Test
     void updateMany() {
+    }
+
+    @Test
+    void insertOne() {
+        CourseParam courseParam = new CourseParam();
+        courseParam.setName("线性代数");
+        courseParam.setInstructor("泽阳君");
+        courseParam.setCredit(new BigDecimal("8"));
+        courseParam.setLessionPeriod(new BigDecimal("300"));
+        courseParam.setCreateTime(LocalDateTime.now());
+        courseParam.setUpdateTime(LocalDateTime.now());
+        courseParamRepository.insertOne(courseParam);
     }
 }

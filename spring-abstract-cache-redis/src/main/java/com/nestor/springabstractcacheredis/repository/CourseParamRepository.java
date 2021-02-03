@@ -14,4 +14,5 @@ public interface CourseParamRepository {
 
     Integer updateMany(CourseParam courseParam);
 
+    CourseParam insertOne(CourseParam courseParam);
 }
