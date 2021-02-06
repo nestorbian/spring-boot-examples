@@ -20,13 +20,13 @@
         <!--<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>-->
         <!--不合并 mapper.xml，直接覆盖，不加的话多次执行会生成重复的xml语句-->
         <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin" />
-        <plugin type="com.nestor.mybatisgeneratordemo.common.MyToStringPlugin" />
-        <plugin type="com.nestor.mybatisgeneratordemo.common.BaseMapperGeneratorPlugin">
-            <property name="baseMapper" value="com.nestor.mybatisgeneratordemo.mapper.BaseMapper" />
+        <plugin type="com.nestor.${projectName}.common.MyToStringPlugin" />
+        <plugin type="com.nestor.${projectName}.common.BaseMapperGeneratorPlugin">
+            <property name="baseMapper" value="com.nestor.${projectName}.mapper.BaseMapper" />
         </plugin>
 
         <!-- 指在创建class时，对注释进行控制-->
-        <commentGenerator type="com.nestor.mybatisgeneratordemo.common.MyCommentGenerator">
+        <commentGenerator type="com.nestor.${projectName}.common.MyCommentGenerator">
             <property name="suppressDate" value="true"/>
             <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
             <property name="suppressAllComments" value="false"/>
@@ -48,7 +48,7 @@
         </javaTypeResolver>
         <!-- targetPackage：生成的实体类所在的包 -->
         <!-- targetProject：生成的实体类所在的硬盘位置 -->
-        <javaModelGenerator targetPackage="com.nestor.mybatisgeneratordemo.po"
+        <javaModelGenerator targetPackage="com.nestor.${projectName}.po"
                             targetProject="${baseTargetProject}/src/main/java">
             <!-- 是否允许子包 -->
             <property name="enableSubPackages" value="false"/>
@@ -58,7 +58,7 @@
             <property name="trimStrings" value="true"/>
             <!-- 建立modal对象是否不可改变 即生成的modal对象不会有setter方法，只有构造方法 -->
             <property name="immutable" value="false"/>
-            <property name="rootClass" value="com.nestor.mybatisgeneratordemo.po.BaseModel"/>
+            <property name="rootClass" value="com.nestor.${projectName}.po.BaseModel"/>
         </javaModelGenerator>
         <!-- targetPackage 和 targetProject：生成的 mapper 文件的包和位置 -->
         <sqlMapGenerator targetPackage="mapper"
@@ -68,11 +68,11 @@
         </sqlMapGenerator>
         <!-- targetPackage 和 targetProject：生成的 interface 文件的包和位置 -->
         <javaClientGenerator type="XMLMAPPER"
-                             targetPackage="com.nestor.mybatisgeneratordemo.mapper"
+                             targetPackage="com.nestor.${projectName}.mapper"
                              targetProject="${baseTargetProject}/src/main/java">
             <!-- 针对 oracle 数据库的一个配置，是否把 schema 作为字包名 -->
             <property name="enableSubPackages" value="false"/>
-            <!--<property name="rootInterface" value="com.nestor.mybatisgeneratordemo.mapper.BaseMapper"/>-->
+            <!--<property name="rootInterface" value="com.nestor.${projectName}.mapper.BaseMapper"/>-->
         </javaClientGenerator>
         <!-- tableName是数据库中的表名，domainObjectName是生成的JAVA模型名，后面的参数不用改，要生成更多的表就在下面继续加table标签 -->
         <!--<table tableName="%" schema="root">-->
@@ -80,11 +80,11 @@
         <!--</table>-->
         <table tableName="grade_param" domainObjectName="GradeParam">
             <generatedKey column="id" sqlStatement="MySql" identity="true" type="post"/>
-            <columnOverride column="level" javaType="com.nestor.mybatisgeneratordemo.enums.GradeLevel"/>
+            <columnOverride column="level" javaType="com.nestor.${projectName}.enums.GradeLevel"/>
         </table>
         <table tableName="student" domainObjectName="Student">
             <generatedKey column="id" sqlStatement="MySql" identity="true" type="post"/>
-            <columnOverride column="sex" javaType="com.nestor.mybatisgeneratordemo.enums.Sex"/>
+            <columnOverride column="sex" javaType="com.nestor.${projectName}.enums.Sex"/>
         </table>
         <table tableName="school" domainObjectName="School">
             <generatedKey column="id" sqlStatement="MySql" identity="true" type="post"/>
