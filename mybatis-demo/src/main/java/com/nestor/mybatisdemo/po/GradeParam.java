@@ -16,13 +16,11 @@ import java.time.LocalDateTime;
  * @date : 2020/3/20
  */
 @Data
-public class GradeParam implements Serializable {
+public class GradeParam extends BaseModel implements Serializable {
     public static final long serialVersionUID = 1L;
     private Long id;
     private String name;
     private String managerName;
     @JsonDeserialize(using = BaseEnumJsonDeserializer.class)
     private GradeLevel level;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
 }

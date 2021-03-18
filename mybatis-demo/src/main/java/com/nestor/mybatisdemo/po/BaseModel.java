@@ -1,4 +1,4 @@
-package com.nestor.mybatisgeneratordemo.po;
+package com.nestor.mybatisdemo.po;
 
 import java.time.LocalDateTime;
 

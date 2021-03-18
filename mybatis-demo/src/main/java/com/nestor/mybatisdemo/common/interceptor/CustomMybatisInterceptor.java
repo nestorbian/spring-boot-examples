@@ -1,4 +1,4 @@
-package com.nestor.mybatisdemo.common;
+package com.nestor.mybatisdemo.common.interceptor;
 
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;

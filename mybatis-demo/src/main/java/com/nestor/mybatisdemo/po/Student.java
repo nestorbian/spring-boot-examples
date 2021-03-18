@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * @date : 2020/3/21
  */
 @Data
-public class Student {
+public class Student  extends BaseModel {
     private Long id;
     private String name;
     private Integer age;
@@ -24,6 +24,4 @@ public class Student {
     private Sex sex;
     private BigDecimal enterScore;
     private Long schoolId;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
 }

@@ -23,12 +23,12 @@
         <!--空值的默认 JDBC 类型-->
         <setting name="jdbcTypeForNull" value="OTHER"/>
         <!--指定 Enum 使用的默认TypeHandler -->
-        <setting name="defaultEnumTypeHandler" value="org.apache.ibatis.type.EnumTypeHandler"/>
-        <!--<setting name="defaultEnumTypeHandler" value="com.nestor.mybatisdemo.common.GenericEnumTypeHandler"/>-->
+        <!--<setting name="defaultEnumTypeHandler" value="org.apache.ibatis.type.EnumTypeHandler"/>-->
+        <setting name="defaultEnumTypeHandler" value="com.nestor.mybatisgeneratordemo.common.GenericEnumTypeHandler"/>
         <!--非默认值，设置驼峰匹配-->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
         <!--控制台打印 可打印sql入参出参-->
-        <setting name="logImpl" value="STDOUT_LOGGING" />
+        <!--<setting name="logImpl" value="STDOUT_LOGGING" />-->
         <!--当返回行的所有列都是空时，MyBatis默认返回 null。 当开启这个设置时，MyBatis会返回一个空实例-->
         <setting name="returnInstanceForEmptyRow" value="false" />
     </settings>
@@ -43,8 +43,15 @@
         <package name="com.nestor.mybatisgeneratordemo.typehandler" />
     </typeHandlers>
 
-    <environments default="mysql">
-        <environment id="mysql">
+    <!--添加绑定默认值拦截器、SQl log拦截器-->
+    <plugins>
+        <plugin interceptor="com.nestor.mybatisgeneratordemo.common.interceptor.BoundDefaultValueInterceptor" />
+        <plugin interceptor="com.nestor.mybatisgeneratordemo.common.interceptor.MybatisLogInterceptor" />
+    </plugins>
+
+    <!--多环境配置并不是多数据源，只能用default指定一个环境,但是可以让SQL做到多环境兼容-->
+    <environments default="dev">
+        <environment id="dev">
             <transactionManager type="JDBC" />
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.cj.jdbc.Driver" />
@@ -53,12 +60,21 @@
                 <property name="password" value="123456" />
             </dataSource>
         </environment>
+        <environment id="prod">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver" />
+                <property name="url" value="jdbc:mysql://localhost:3306/prod-demo?useUniCode=true&amp;characterEncoding=utf-8&amp;serverTimezone=UTC" />
+                <property name="username" value="root" />
+                <property name="password" value="123456" />
+            </dataSource>
+        </environment>
     </environments>
 
+    <!--给数据库厂商取别名 方便mapper xml中datasourceId指定，优执行mapper xml语句中datasourceId=当前数据源的别名的语句，其次是不带datasourceId的语句-->
     <databaseIdProvider type="DB_VENDOR">
         <property name="MySQL" value="mysql"/>
         <property name="Oracle" value="oracle" />
     </databaseIdProvider>
-
 
 </configuration>

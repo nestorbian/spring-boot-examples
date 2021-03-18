@@ -46,7 +46,9 @@
 
     <!--定义插件-->
     <plugins>
-        <plugin interceptor="com.nestor.mybatisdemo.common.CustomMybatisInterceptor"></plugin>
+        <plugin interceptor="com.nestor.mybatisdemo.common.interceptor.CustomMybatisInterceptor" />
+        <plugin interceptor="com.nestor.mybatisdemo.common.interceptor.BoundDefaultValueInterceptor" />
+        <plugin interceptor="com.nestor.mybatisdemo.common.interceptor.MybatisLogInterceptor" />
     </plugins>
 
     <!--多环境配置并不是多数据源，只能用default指定一个环境,但是可以让SQL做到多环境兼容-->

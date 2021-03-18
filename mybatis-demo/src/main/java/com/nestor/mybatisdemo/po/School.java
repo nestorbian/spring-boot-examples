@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class School implements Serializable {
+public class School extends BaseModel implements Serializable {
     public static final long serialVersionUID = 1L;
     @NonNull
     private Long id;
@@ -29,6 +29,4 @@ public class School implements Serializable {
     private String address;
     private LocalDate buildDate;
     private String description;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
 }
