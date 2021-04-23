@@ -1,0 +1,51 @@
+{
+  "groups": [
+    {
+      "name": "redisson.client",
+      "type": "com.nestor.redissonspringbootstarter.RedissonClientProperties",
+      "sourceType": "com.nestor.redissonspringbootstarter.RedissonClientProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "redisson.client.host",
+      "type": "java.lang.String",
+      "description": "host",
+      "sourceType": "com.nestor.redissonspringbootstarter.RedissonClientProperties",
+      "defaultValue": "localhost"
+    },
+    {
+      "name": "redisson.client.port",
+      "type": "java.lang.Integer",
+      "description": "port",
+      "sourceType": "com.nestor.redissonspringbootstarter.RedissonClientProperties",
+      "defaultValue": 6379
+    },
+    {
+      "name": "redisson.client.password",
+      "type": "java.lang.String",
+      "description": "password",
+      "sourceType": "com.nestor.redissonspringbootstarter.RedissonClientProperties"
+    },
+    {
+      "name": "redisson.client.ssl",
+      "type": "java.lang.Boolean",
+      "description": "ssl",
+      "sourceType": "com.nestor.redissonspringbootstarter.RedissonClientProperties"
+    },
+    {
+      "name": "redisson.client.timeout",
+      "type": "java.lang.Integer",
+      "description": "timeout",
+      "sourceType": "com.nestor.redissonspringbootstarter.RedissonClientProperties"
+    },
+    {
+      "name": "redisson.client.database",
+      "type": "java.lang.Integer",
+      "description": "database",
+      "sourceType": "com.nestor.redissonspringbootstarter.RedissonClientProperties",
+      "defaultValue": 0
+    }
+  ],
+  "hints": []
+}
