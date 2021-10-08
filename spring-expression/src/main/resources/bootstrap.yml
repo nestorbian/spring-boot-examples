@@ -1,0 +1,7 @@
+boy-age: 18
+spring:
+  config:
+    location: classpath:/myConfig/,classpath:/,file:./
+    name: my-config
+  profiles:
+    active: dev
