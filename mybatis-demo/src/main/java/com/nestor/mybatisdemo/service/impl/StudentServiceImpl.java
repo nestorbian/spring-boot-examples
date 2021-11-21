@@ -4,6 +4,10 @@ import com.nestor.mybatisdemo.dto.StudentDTO;
 import com.nestor.mybatisdemo.mapper.StudentMapper;
 import com.nestor.mybatisdemo.po.Student;
 import com.nestor.mybatisdemo.service.StudentService;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +28,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private StudentMapper studentMapper;
+
+    @Autowired
+    private SqlSessionFactory sqlSessionFactory;
 
     @Override
     public int insertOne(Student student) {
@@ -73,5 +80,30 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public int deleteStudentSelective(String name, Integer age) {
         return studentMapper.deleteStudentSelective(name, age);
+    }
+
+    /**
+     * batch模式批量插入
+     *
+     * @param students
+     * @return void
+     * @date : 2021/11/17 15:42
+     * @author : Nestor.Bian
+     * @since : 1.0
+     */
+    @Override
+    public void batchInsert(List<Student> students) {
+        // 无法和声明式事务一起用
+        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
+        StudentMapper mapper = sqlSession.getMapper(StudentMapper.class);
+        for (int i = 0; i < students.size(); i++) {
+            if ((i + 1) % 50 == 0) {
+                sqlSession.flushStatements();
+            }
+            mapper.insertOne(students.get(i));
+        }
+
+        // 事务结束
+        sqlSession.commit();
     }
 }

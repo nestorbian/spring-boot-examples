@@ -24,4 +24,6 @@ public interface StudentService {
     int updateStduentSelective(Student student);
 
     int deleteStudentSelective(String name, Integer age);
+
+    void batchInsert(List<Student> student);
 }
