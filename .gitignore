@@ -31,3 +31,6 @@ build/
 /.mvn/
 /import-annotation/mvnw.cmd
 /import-annotation/mvnw
+
+### log ###
+/**/filePath_IS_UNDEFINED

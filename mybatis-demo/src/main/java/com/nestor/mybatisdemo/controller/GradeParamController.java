@@ -37,27 +37,41 @@ public class GradeParamController {
     }
 
     @GetMapping(path = "/grade-params/like")
-    public List<GradeParam> selectByNameLike(@RequestParam String name, @RequestBody GradeParam gradeParam) {
-        System.err.println(gradeParam);
-        // return gradeParamService.selectByNameLike(name);
-        return Arrays.asList(gradeParam);
+    public List<GradeParam> selectByNameLike(@RequestParam String name) {
+        log.debug("name:{}", name);
+        // System.err.println(gradeParam);
+        return gradeParamService.selectByNameLike(name);
+        // return Arrays.asList(gradeParam);
     }
 
+    /**
+     * FetchSize需要与流水查询一起用才起作用
+     * 第二种流式查询：需要设置 fetchSize="-2147483648"
+     * 不需要在url上加useCursorFetch=true
+     * 如何判断是否生效：ResultSetImpl中的rowData的类型是否为ResultsetRowsStreaming
+     *
+     * @param
+     * @return java.util.List<com.nestor.mybatisdemo.po.GradeParam>
+     * @date : 2023/3/29 21:56
+     * @author : Nestor.Bian
+     * @since : 1.0
+     */
     @GetMapping(path = "/grade-params")
     public List<GradeParam> listWithFetchSize() {
         return gradeParamService.listWithFetchSize();
     }
 
     @PostMapping(path = "/grade-param")
-    public GradeParam insertOne(GradeParam gradeParam) {
+    public GradeParam insertOne(@RequestBody GradeParam gradeParam) {
         System.err.println(gradeParam);
-        // gradeParamService.insertOne(gradeParam);
+        gradeParamService.insertOne(gradeParam);
         return gradeParam;
     }
 
 
     /**
-     * 流式查询
+     * 流式查询，需要在url上加useCursorFetch=true才能起作用
+     * 如何判断是否生效：ResultSetImpl中的rowData的类型是否为ResultsetRowsCursor
      *
      * @param
      * @return java.util.List<com.nestor.mybatisdemo.po.GradeParam>

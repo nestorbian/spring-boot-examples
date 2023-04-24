@@ -16,6 +16,7 @@ import java.sql.SQLException;
 
 /**
  * BaseEnum枚举类型处理器
+ * 通用枚举处理器参考 GenericEnumTypeHandler
  *
  * @author : Nestor.Bian
  * @version : V 1.0

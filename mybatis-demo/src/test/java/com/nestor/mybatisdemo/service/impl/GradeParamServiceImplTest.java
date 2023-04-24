@@ -13,11 +13,14 @@ import org.apache.ibatis.executor.SimpleExecutor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.transaction.Transaction;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -49,8 +52,51 @@ class GradeParamServiceImplTest {
 	 */
 	@Test
 	void selectByNameLike() {
-		List<GradeParam> gradeParams = gradeParamService.selectByNameLike("aaa\\");
+		List<GradeParam> gradeParams = gradeParamService.selectByNameLike("%a%");
 		log.info("结果: [{}]", gradeParams);
+	}
+
+	@Test
+	void list() {
+		List<GradeParam> gradeParams = gradeParamService.listWithStreaming();
+		log.info("结果: [{}]", gradeParams);
+	}
+
+	@Autowired
+	private SqlSessionTemplate sqlSessionTemplate;
+
+	/**
+	 * FetchSize需要与流水查询一起用才起作用
+	 * 第二种流式查询：需要设置 fetchSize="-2147483648"
+	 * 不需要在url上加useCursorFetch=true
+	 * 如何判断是否生效：ResultSetImpl中的rowData的类型是否为ResultsetRowsStreaming
+	 *
+	 * @param
+	 * @return void
+	 * @date : 2023/3/29 22:04
+	 * @author : Nestor.Bian
+	 * @since : 1.0
+	 */
+	@Test
+	void listWithStreaming2() {
+		CustomResultHandler customResultHandler = new CustomResultHandler();
+		sqlSessionTemplate.select("com.nestor.mybatisdemo.mapper.GradeParamMapper.listWithFetchSize", customResultHandler);
+
+		log.info("结果: [{}]", customResultHandler.getSize());
+	}
+
+	public static class CustomResultHandler implements ResultHandler<GradeParam> {
+
+		private int size = 0;
+
+		@Override
+		public void handleResult(ResultContext<? extends GradeParam> resultContext) {
+			size ++;
+		}
+
+		public int getSize() {
+			return size;
+		}
 	}
 
 

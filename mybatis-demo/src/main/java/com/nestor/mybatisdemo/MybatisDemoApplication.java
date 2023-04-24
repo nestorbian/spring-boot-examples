@@ -6,13 +6,15 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
 @SpringBootApplication
 @MapperScan("com.nestor.mybatisdemo.mapper")
-@EnableTransactionManagement
+// @EnableTransactionManagement
+// @EnableAspectJAutoProxy
 public class MybatisDemoApplication implements ApplicationRunner {
 
     @Autowired

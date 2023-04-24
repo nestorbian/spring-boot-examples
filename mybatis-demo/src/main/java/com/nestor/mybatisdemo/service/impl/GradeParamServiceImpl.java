@@ -1,18 +1,25 @@
 package com.nestor.mybatisdemo.service.impl;
 
-import com.nestor.mybatisdemo.enums.GradeLevel;
-import com.nestor.mybatisdemo.mapper.GradeParamMapper;
-import com.nestor.mybatisdemo.po.GradeParam;
-import com.nestor.mybatisdemo.service.GradeParamService;
-import org.apache.ibatis.cursor.Cursor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.session.ResultContext;
+import org.apache.ibatis.session.ResultHandler;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.nestor.mybatisdemo.enums.GradeLevel;
+import com.nestor.mybatisdemo.mapper.GradeParamMapper;
+import com.nestor.mybatisdemo.po.GradeParam;
+import com.nestor.mybatisdemo.service.GradeParamService;
 
 /**
  * 年级service
@@ -22,10 +29,14 @@ import java.util.List;
  * @date : 2020/3/22
  */
 @Service
+@Slf4j
 public class GradeParamServiceImpl implements GradeParamService {
 
     @Autowired
     private GradeParamMapper gradeParamMapper;
+
+    @Autowired
+    private SqlSessionTemplate sqlSessionTemplate;
 
     @Override
     @Transactional
@@ -37,13 +48,38 @@ public class GradeParamServiceImpl implements GradeParamService {
     }
 
     @Override
+    @Transactional
     public int insertOne(GradeParam gradeParam) {
         return gradeParamMapper.insertOne(gradeParam);
     }
 
     @Override
     public List<GradeParam> listWithFetchSize() {
-        return gradeParamMapper.listWithFetchSize();
+        CustomResultHandler customResultHandler = new CustomResultHandler();
+        sqlSessionTemplate.select("com.nestor.mybatisdemo.mapper.GradeParamMapper.listWithFetchSize", customResultHandler);
+
+        log.info("结果: [{}]", customResultHandler.getSize());
+
+        // return gradeParamMapper.listWithFetchSize();
+        return customResultHandler.getGradeParams();
+    }
+
+    public static class CustomResultHandler implements ResultHandler<GradeParam> {
+
+        private int size = 0;
+
+        @Getter
+        private List<GradeParam> gradeParams = new ArrayList<>();
+
+        @Override
+        public void handleResult(ResultContext<? extends GradeParam> resultContext) {
+            gradeParams.add(resultContext.getResultObject());
+            size ++;
+        }
+
+        public int getSize() {
+            return size;
+        }
     }
 
     /**
@@ -62,7 +98,7 @@ public class GradeParamServiceImpl implements GradeParamService {
         Iterator<GradeParam> iterator = cursor.iterator();
         List<GradeParam> gradeParamList = new LinkedList<>();
 
-        if (iterator.hasNext()) {
+        while (iterator.hasNext()) {
             gradeParamList.add(iterator.next());
         }
 
@@ -70,6 +106,7 @@ public class GradeParamServiceImpl implements GradeParamService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public List<GradeParam> selectByNameLike(String name) {
         return gradeParamMapper.selectByNameLike(name);
     }

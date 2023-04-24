@@ -1,9 +1,14 @@
 package com.nestor.mybatisdemo.service.impl;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.time.LocalDateTime;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -82,5 +87,33 @@ public class StudentServiceImplTest {
 
         stopWatch.stop();
         log.info("batchInsert2耗时[{}]ms", stopWatch.getTotalTimeMillis());
+    }
+
+
+    @Test
+    public void update() {
+        Student student = new Student();
+        student.setId(6L);
+        student.setAge(11);
+
+        log.info("影响行数:[{}]", studentService.updateStduentSelective(student));
+    }
+
+
+    @Test
+    @SneakyThrows
+    public void update2() {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mybatis-demo?serverTimezone=Asia" +
+                "/Shanghai&charEncoding=UTF-8", "root", "123456");
+        connection.setAutoCommit(false);
+        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE student SET age = ? WHERE id = ?");
+        preparedStatement.setInt(1, 11);
+        preparedStatement.setLong(2, 6L);
+        int i = preparedStatement.executeUpdate();
+        connection.commit();
+
+        preparedStatement.close();
+        connection.close();
+        log.info("影响行数:[{}]", i);
     }
 }

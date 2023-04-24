@@ -14,6 +14,7 @@ import java.sql.SQLException;
 
 /**
  * 年级枚举类型处理器
+ * @MappedTypes、@MappedJdbcTypes
  *
  * @author : Nestor.Bian
  * @version : V 1.0

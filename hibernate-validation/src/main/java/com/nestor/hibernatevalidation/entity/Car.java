@@ -4,12 +4,14 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.groups.Default;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Car {
+public class Car implements Serializable {
 
-    @NotBlank(message = "名称不能为空")
-    @Length(message = "名称长度不正确", min = 5, groups = Limit.class)
+    private static final long serialVersionUID = 3246433079484650167L;
+    @NotBlank
+    // @Length(message = "名称长度不正确", min = 5, groups = Limit.class)
     private String name;
     private BigDecimal amount;
 

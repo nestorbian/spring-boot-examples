@@ -27,8 +27,8 @@
         <!--<setting name="defaultEnumTypeHandler" value="com.nestor.mybatisdemo.common.GenericEnumTypeHandler"/>-->
         <!--非默认值，设置驼峰匹配-->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
-        <!--控制台打印 可打印sql入参出参-->
-        <setting name="logImpl" value="STDOUT_LOGGING" />
+        <!--控制台打印 可打印sql入参出参 STDOUT_LOGGING SLF4J-->
+        <setting name="logImpl" value="SLF4J" />
         <!--当返回行的所有列都是空时，MyBatis默认返回 null。 当开启这个设置时，MyBatis会返回一个空实例-->
         <setting name="returnInstanceForEmptyRow" value="false" />
     </settings>
