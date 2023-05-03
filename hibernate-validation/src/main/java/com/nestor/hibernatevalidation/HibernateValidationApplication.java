@@ -32,6 +32,7 @@ public class HibernateValidationApplication implements ApplicationRunner {
     @Autowired
     private DefaultListableBeanFactory beanFactory;
 
+	/* hello */
     public static void main(String[] args) {
         System.out.println(HibernateValidationApplication.class.getClassLoader());
         System.out.println(Thread.currentThread().getContextClassLoader());
