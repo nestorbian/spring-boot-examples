@@ -6,6 +6,7 @@ import com.nestor.mybatisdemo.provider.DynamicSqlProvider;
 import com.nestor.mybatisdemo.provider.SqlProviderMethodResolver;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
@@ -17,6 +18,7 @@ import org.apache.ibatis.annotations.UpdateProvider;
 import java.util.List;
 import java.util.Map;
 
+@Mapper
 public interface StudentMapper {
 
     int insertOne(Student student);
@@ -48,4 +50,5 @@ public interface StudentMapper {
     @DeleteProvider(type = DynamicSqlProvider.class, method = "deleteStudentSelective")
     int deleteStudentSelective(@Param("name") String name1, @Param("age") Integer age1);
 
+    int batchInsert(List<Student> students);
 }

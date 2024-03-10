@@ -1,9 +1,10 @@
 package com.nestor.hibernatevalidation.schedule;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.annotation.SchedulingConfigurer;
-import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,9 +12,11 @@ import org.springframework.stereotype.Component;
  * @version : V 1.0
  * @date : 2022/5/17
  */
+// @Lazy
 @Component
+@Scope(GenericBeanDefinition.SCOPE_PROTOTYPE)
 @Slf4j
-public class ScheduleTest implements SchedulingConfigurer {
+public class ScheduleTest implements InitializingBean {
 
     @Scheduled(cron = "*/5 * * * * ?")
     public void run() {
@@ -21,7 +24,7 @@ public class ScheduleTest implements SchedulingConfigurer {
     }
 
     @Override
-    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-        boolean a = true == Integer.valueOf("1") instanceof Integer;
+    public void afterPropertiesSet() throws Exception {
+        System.out.println(2);
     }
 }

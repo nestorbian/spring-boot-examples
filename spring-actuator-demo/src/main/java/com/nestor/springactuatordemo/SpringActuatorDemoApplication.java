@@ -12,7 +12,8 @@ import java.lang.management.ManagementFactory;
 public class SpringActuatorDemoApplication {
 
     public static void main(String[] args) throws Exception {
-        // 注册MBean
+        // 注册MBean，不会展示在actuator上
+        // @EndPoint监控断点既可以在jmx和http方式访问
         MBeanServer mBeanServer= ManagementFactory.getPlatformMBeanServer();
         ObjectName objectName=new ObjectName("com.nestor.springactuatordemo:type=SystemInfo");
         SystemInfo SystemInfo =new SystemInfo();

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration debug="false">
+    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
+<!--     <property name="LOG_HOME" value="F://slog" />  -->
+    <springProperty scope="context" name="filePath" source="logging.file.path"/>
+
+    <!-- 彩色日志 -->
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+    <!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr([openid=%X{openid}&amp;username=%X{username}]){faint} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}" />
+    <!-- Console 输出设置 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder  class="com.nestor.hibernatevalidation.support.desensitization.DesensitizationPatternLayoutEncoder">
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+            <desensitization>true</desensitization>
+            <replace>
+                <!-- 11位的手机号：保留前3后4 -->
+                <regex>
+                    <![CDATA[
+    (mobile|手机号)(=|=\[|\":\"|:|：|=')(1)([3-9]{2})(\d{4})(\d{4})(\]|\"|'|)
+       ]]>
+                </regex>
+                <replacement>$1$2$3$4****$6$7</replacement>
+            </replace>
+            <replace>
+                <!-- 固定电话：XXXX-XXXXXXXX或XXX-XXXXXXXX，保留区号+前2后2 -->
+                <regex>
+                    <![CDATA[
+    (tel|座机)(=|=\[|\":\"|:|：|=')([\d]{3,4}-)(\d{2})(\d{4})(\d{2})(\]|\"|'|)
+       ]]>
+                </regex>
+                <replacement>$1$2$3$4****$6$7</replacement>
+            </replace>
+            <replace>
+                <!-- 地址：汉字+字母+数字+下划线+中划线，留前3个汉字 -->
+                <regex>
+                    <![CDATA[
+    (地址|住址|address)(=|=\[|\":\"|:|：|=')([\u4e00-\u9fa5]{3})(\w|[\u4e00-\u9fa5]|-)*(\]|\"|'|)
+       ]]>
+                </regex>
+                <replacement>$1$2$3****$5</replacement>
+            </replace>
+
+
+            <replace>
+                <!-- 19位的卡号，保留后4 -->
+                <regex>
+                    <![CDATA[
+    (cardNo|卡号)(=|=\[|\":\"|:|：|=')(\d{15})(\d{4})(\]|\"|'|)
+       ]]>
+                </regex>
+                <replacement>$1$2***************$4$5</replacement>
+            </replace>
+
+            <replace>
+                <!-- 姓名,2-4汉字，留前1-->
+                <regex>
+                    <![CDATA[
+    (name|姓名)(=|=\[|\":\"|:|：|=')([\u4e00-\u9fa5]{1})([\u4e00-\u9fa5]{1,3})(\]|\"|'|)
+       ]]>
+                </regex>
+                <replacement>$1$2$3**$5</replacement>
+            </replace>
+
+            <replace>
+                <!--  密码 6位数字，全* -->
+                <regex>
+                    <![CDATA[
+     (password|密码|验证码)(=|=\[|\":\"|:|：|=')(\d{6})(\]|\"|'|)
+       ]]>
+                </regex>
+                <replacement>$1$2******$4</replacement>
+            </replace>
+
+            <replace>
+                <!-- 身份证，18位（结尾为数字或X、x），保留前1后1 -->
+                <regex>
+                    <![CDATA[
+       (身份证号|idCard)(=|=\[|\":\"|:|：|=')(\d{1})(\d{16})([\d|X|x]{1})(\]|\"|)
+       ]]>
+                </regex>
+                <replacement>$1$2$3****************$5$6</replacement>
+            </replace>
+
+            <replace>
+                <!-- 邮箱，保留@前的前1后1 -->
+                <regex>
+                    <![CDATA[
+       (\w{1})(\w*)(\w{1})@(\w+).com
+       ]]>
+                </regex>
+                <replacement>$1****$3@$4.com</replacement>
+            </replace>
+        </encoder>
+    </appender>
+
+
+    <!-- 不带彩色的日志在控制台输出时候的设置 -->
+    <!-- <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+             格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender> -->
+    <!-- 按照每天生成日志文件 -->
+    <appender name="FILE"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${filePath}/hibernate-validation.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+            <maxFileSize>100MB</maxFileSize>
+        </rollingPolicy>
+        <encoder class="com.nestor.hibernatevalidation.support.desensitization.DesensitizationPatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <desensitization>true</desensitization>
+                <replace>
+                    <!-- 11位的手机号：保留前3后4 -->
+                    <regex>
+                        <![CDATA[
+    (mobile|手机号)(=|=\[|\":\"|:|：|=')(1)([3-9]{2})(\d{4})(\d{4})(\]|\"|'|)
+       ]]>
+                    </regex>
+                    <replacement>$1$2$3$4****$6$7</replacement>
+                </replace>
+                <replace>
+                    <!-- 固定电话：XXXX-XXXXXXXX或XXX-XXXXXXXX，保留区号+前2后2 -->
+                    <regex>
+                        <![CDATA[
+    (tel|座机)(=|=\[|\":\"|:|：|=')([\d]{3,4}-)(\d{2})(\d{4})(\d{2})(\]|\"|'|)
+       ]]>
+                    </regex>
+                    <replacement>$1$2$3$4****$6$7</replacement>
+                </replace>
+                <replace>
+                    <!-- 地址：汉字+字母+数字+下划线+中划线，留前3个汉字 -->
+                    <regex>
+                        <![CDATA[
+    (地址|住址|address)(=|=\[|\":\"|:|：|=')([\u4e00-\u9fa5]{3})(\w|[\u4e00-\u9fa5]|-)*(\]|\"|'|)
+       ]]>
+                    </regex>
+                    <replacement>$1$2$3****$5</replacement>
+                </replace>
+
+
+                <replace>
+                    <!-- 19位的卡号，保留后4 -->
+                    <regex>
+                        <![CDATA[
+    (cardNo|卡号)(=|=\[|\":\"|:|：|=')(\d{15})(\d{4})(\]|\"|'|)
+       ]]>
+                    </regex>
+                    <replacement>$1$2***************$4$5</replacement>
+                </replace>
+
+                <replace>
+                    <!-- 姓名,2-4汉字，留前1-->
+                    <regex>
+                        <![CDATA[
+    (name|姓名)(=|=\[|\":\"|:|：|=')([\u4e00-\u9fa5]{1})([\u4e00-\u9fa5]{1,3})(\]|\"|'|)
+       ]]>
+                    </regex>
+                    <replacement>$1$2$3**$5</replacement>
+                </replace>
+
+                <replace>
+                    <!--  密码 6位数字，全* -->
+                    <regex>
+                        <![CDATA[
+     (password|密码|验证码)(=|=\[|\":\"|:|：|=')(\d{6})(\]|\"|'|)
+       ]]>
+                    </regex>
+                    <replacement>$1$2******$4</replacement>
+                </replace>
+
+                <replace>
+                    <!-- 身份证，18位（结尾为数字或X、x），保留前1后1 -->
+                    <regex>
+                        <![CDATA[
+       (身份证号|idCard)(=|=\[|\":\"|:|：|=')(\d{1})(\d{16})([\d|X|x]{1})(\]|\"|)
+       ]]>
+                    </regex>
+                    <replacement>$1$2$3****************$5$6</replacement>
+                </replace>
+
+                <replace>
+                    <!-- 邮箱，保留@前的前1后1 -->
+                    <regex>
+                        <![CDATA[
+       (\w{1})(\w*)(\w{1})@(\w+).com
+       ]]>
+                    </regex>
+                    <replacement>$1****$3@$4.com</replacement>
+                </replace>
+        </encoder>
+        <!--无效配置 linux上会使按天滚动日志策略失效  日志文件最大的大小-->
+       <!--<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">-->
+         <!--<MaxFileSize>50MB</MaxFileSize>-->
+       <!--</triggeringPolicy>-->
+    </appender>
+   <!-- show parameters for hibernate sql 专为 Hibernate 定制 打印sql参数-->
+<!--    <logger name="org.hibernate.type.descriptor.sql.BasicBinder"  level="TRACE" />-->
+<!--    <logger name="org.hibernate.type.descriptor.sql.BasicExtractor"  level="DEBUG" />-->
+<!--    <logger name="org.hibernate.SQL" level="DEBUG" />-->
+<!--    <logger name="org.hibernate.engine.QueryParameters" level="DEBUG" />-->
+<!--    <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG" />-->
+
+    <!--myibatis log configure-->
+<!--    <logger name="com.apache.ibatis" level="TRACE"/>-->
+<!--    <logger name="java.sql.Connection" level="DEBUG"/>-->
+<!--    <logger name="java.sql.Statement" level="DEBUG"/>-->
+<!--    <logger name="java.sql.PreparedStatement" level="DEBUG"/>-->
+    <logger name="com.nestor.hibernatevalidation.service.AbstractLogService" level="DEBUG"/>
+
+    <!-- 日志输出级别 -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </root>
+     <!--日志异步到数据库 -->
+    <!--<appender name="DB" class="ch.qos.logback.classic.db.DBAppender">-->
+        <!--日志异步到数据库-->
+        <!--<connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">-->
+           <!--连接池-->
+           <!--<dataSource class="com.mchange.v2.c3p0.ComboPooledDataSource">-->
+              <!--<driverClass>com.mysql.jdbc.Driver</driverClass>-->
+              <!--<url>jdbc:mysql://127.0.0.1:3306/logback?useSSL=false</url>-->
+              <!--<user>root</user>-->
+              <!--<password>123456</password>-->
+            <!--</dataSource>-->
+        <!--</connectionSource>-->
+    <!--</appender>-->
+</configuration>

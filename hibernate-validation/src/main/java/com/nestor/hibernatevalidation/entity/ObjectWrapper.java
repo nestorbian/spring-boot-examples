@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 public class ObjectWrapper<E> {
 
 
-    @NotBlank
+    @NotBlank(groups = Car.Limit.class)
     private String name;
 
     @Valid

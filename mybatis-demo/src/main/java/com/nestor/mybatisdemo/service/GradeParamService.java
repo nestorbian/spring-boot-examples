@@ -5,6 +5,7 @@ import com.nestor.mybatisdemo.po.GradeParam;
 
 import java.util.List;
 
+// @MyLog不起作用
 public interface GradeParamService {
 
     GradeParam selectByNameAndLevel(String name, GradeLevel level);

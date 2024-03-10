@@ -18,7 +18,8 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.LOWEST_PRECEDENCE - 1)
 public class SimpleAspect {
 
-    @Pointcut("execution(* com.nestor.mybatisdemo.service..*.*(..))")
+    // @Pointcut("execution(* com.nestor.mybatisdemo.service..*.*(..))")
+    @Pointcut("@within(com.nestor.mybatisdemo.aop.MyLog)")
     public void a() {
 
     }

@@ -17,4 +17,6 @@ public interface SchoolService {
 
     School selectByIdWithConstructor(Long id);
 
+    School selectById(Long id);
+
 }

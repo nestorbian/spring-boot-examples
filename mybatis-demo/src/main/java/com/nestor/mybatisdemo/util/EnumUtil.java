@@ -1,6 +1,7 @@
 package com.nestor.mybatisdemo.util;
 
 import com.nestor.mybatisdemo.enums.BaseEnum;
+import com.nestor.mybatisdemo.po.GradeParam;
 
 /**
  * 枚举工具类
@@ -9,7 +10,7 @@ import com.nestor.mybatisdemo.enums.BaseEnum;
  * @version : V 1.0
  * @date : 2020/3/22
  */
-public class EnumUtil {
+public abstract class EnumUtil {
 
     public static <T extends BaseEnum<E>, E> T getByCode(E code, Class<T> tClass) {
         T[] enumConstants = tClass.getEnumConstants();

@@ -19,7 +19,7 @@ import org.apache.http.util.Args;
  */
 public class CustomConnectionKeepAliveStrategy implements ConnectionKeepAliveStrategy {
 
-	private static final int DEFAULT_TIME_OUT = 30;
+	private static final int DEFAULT_TIME_OUT = 120;
 
 	/**
 	 * Returns the duration of time which this connection can be safely kept idle. If the connection is left idle for

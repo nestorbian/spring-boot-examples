@@ -20,6 +20,7 @@ public class MyHandlerInterceptor implements HandlerInterceptor {
         if (request.getRequestURI().equals("/cars/response")) {
             response.getWriter().write("MyHandlerInterceptor response");
             response.flushBuffer();
+            response.getWriter().write("\nMyHandlerInterceptor response");// 可以打印
             return false;
         }
         return true;

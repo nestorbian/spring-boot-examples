@@ -1,8 +1,8 @@
 rest:
   buffer-request-body: true
-  max-idle-time: 30
+  max-idle-time: 120
   #TTL
-  time-to-live: 30
+  time-to-live: 600
   #线程池最大线程数
   max-total-threads: 100
   #每个route下的最大线程数

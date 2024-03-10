@@ -7,6 +7,23 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: localhost
+    port: 6379
+    database: 1
+    timeout: 30s
+    password: 123456
+    lettuce:
+      pool:
+        # 最大线程数
+        max-active: 100
+        # 从线程池获取线程的最大等待时间，超过最大等待时间抛出线程池枯竭的异常
+        max-wait: 60s
+        max-idle: 50
+        # 空闲时至少保留20个线程，不会去回收
+        min-idle: 20
+        # 每300s回收线程执行一次
+        time-between-eviction-runs: 300s
 
 mybatis:
   config-location: classpath:mybatis-config.xml

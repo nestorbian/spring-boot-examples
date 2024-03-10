@@ -108,4 +108,9 @@ public class SchoolController {
         return schoolService.selectByIdWithConstructor(id);
     }
 
+    @GetMapping("/schools/{id}")
+    public School selectById(@PathVariable Long id) {
+        return schoolService.selectById(id);
+    }
+
 }

@@ -1,18 +1,16 @@
 package com.nestor.mybatisdemo;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
 @SpringBootApplication
-@MapperScan("com.nestor.mybatisdemo.mapper")
+// 可以不加@MapperScan来扫描Mapper，通过@AutoConfigurationPakage + @Mapper注解实现。补充：@MapperScan直接扫描接口类，无需加@Mapper注解
+// @MapperScan("com.nestor.mybatisdemo.mapper")
 // @EnableTransactionManagement
 // @EnableAspectJAutoProxy
 public class MybatisDemoApplication implements ApplicationRunner {

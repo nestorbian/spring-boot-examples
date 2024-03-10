@@ -4,8 +4,17 @@
 
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="id" parameterType="Student">
         insert into student(name, age, sex, school_id, enter_score)
-        value (#{name,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR},
+        values (#{name,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR},
         #{schoolId,jdbcType=BIGINT}, #{enterScore,jdbcType=NUMERIC,numericScale=1})
+    </insert>
+
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="Student">
+        insert into student(name, age, sex, school_id, enter_score)
+        values
+        <foreach collection="list" separator="," item="item">
+            (#{item.name,jdbcType=VARCHAR}, #{item.age,jdbcType=INTEGER}, #{item.sex,jdbcType=VARCHAR},
+            #{item.schoolId,jdbcType=BIGINT}, #{item.enterScore,jdbcType=NUMERIC,numericScale=1})
+        </foreach>
     </insert>
 
     <resultMap id="StudentResultMap" type="Student">

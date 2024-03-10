@@ -1,13 +1,6 @@
 package com.nestor.springexpression;
 
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,10 +13,18 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.ParseException;
 import org.springframework.expression.ParserContext;
+import org.springframework.expression.common.TemplateParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author : Nestor.Bian
@@ -38,6 +39,15 @@ public class SpelTestOne {
 
     @Value("#{new com.nestor.springexpression.SpelTestOne.User().toString()}")
     private String user;
+
+    @Test
+    public void test1() {
+        ExpressionParser parser = new SpelExpressionParser();
+        Expression expression = parser.parseExpression("('Hello' + ' World').concat(#end)");
+        EvaluationContext context = new StandardEvaluationContext();
+        context.setVariable("end", "!");
+        System.out.println(expression.getValue(context));
+    }
 
     @Test
     public void testParserContext() {
@@ -220,7 +230,7 @@ public class SpelTestOne {
     @Test
     public void testVariableExpression() {
         ExpressionParser parser = new SpelExpressionParser();
-        EvaluationContext context = new StandardEvaluationContext();
+        EvaluationContext context = new StandardEvaluationContext("我是root对象");
         context.setVariable("name", "路人甲java");
         context.setVariable("lesson", "Spring系列");
 
@@ -231,7 +241,7 @@ public class SpelTestOne {
         System.out.println(lesson);
 
         //StandardEvaluationContext构造器传入root对象，可以通过#root来访问root对象
-        context = new StandardEvaluationContext("我是root对象");
+        // context = new StandardEvaluationContext("我是root对象");
         String rootObj = parser.parseExpression("#root").getValue(context, String.class);
         System.out.println(rootObj);
 
@@ -474,7 +484,104 @@ public class SpelTestOne {
         System.out.println(result3);
     }
 
+    @Test
+    public void test8() {
+        ExpressionParser parser = new SpelExpressionParser();
 
+        //修改list元素值
+        List<Integer> list = new ArrayList<Integer>();
+        list.add(1);
+        list.add(2);
+
+        EvaluationContext context1 = new StandardEvaluationContext();
+        context1.setVariable("collection", list);
+        parser.parseExpression("#collection[1]").setValue(context1, 4);
+        int result1 = parser.parseExpression("#collection[1]").getValue(context1, int.class);
+        System.out.println(result1);
+
+        //修改map元素值
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        map.put("a", 1);
+        EvaluationContext context2 = new StandardEvaluationContext();
+        context2.setVariable("map", map);
+        parser.parseExpression("#map['a']").setValue(context2, 4);
+        Integer result2 = parser.parseExpression("#map['a']").getValue(context2, int.class);
+        System.out.println(result2);
+    }
+
+    @Test
+    public void test9() {
+        ExpressionParser parser = new SpelExpressionParser();
+
+        //1.测试集合或数组
+        List<Integer> list = new ArrayList<Integer>();
+        list.add(4);
+        list.add(5);
+        EvaluationContext context1 = new StandardEvaluationContext();
+        context1.setVariable("list", list);
+        Collection<Integer> result1 = parser.parseExpression("#list.![#this+1]").getValue(context1, Collection.class);
+        result1.forEach(System.out::println);
+
+        System.out.println("------------");
+        //2.测试字典
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        map.put("a", 1);
+        map.put("b", 2);
+        EvaluationContext context2 = new StandardEvaluationContext();
+        context2.setVariable("map", map);
+        List<Integer> result2 = parser.parseExpression("#map.![value+1]").getValue(context2, List.class);
+        result2.forEach(System.out::println);
+    }
+
+    @Test
+    public void test10() {
+        ExpressionParser parser = new SpelExpressionParser();
+
+        //1.测试集合或数组
+        List<Integer> list = new ArrayList<Integer>();
+        list.add(1);
+        list.add(4);
+        list.add(5);
+        list.add(7);
+        EvaluationContext context1 = new StandardEvaluationContext();
+        context1.setVariable("list", list);
+        Collection<Integer> result1 = parser.parseExpression("#list.?[#this>4]").getValue(context1, Collection.class);
+        result1.forEach(System.out::println);
+
+        System.out.println("------------");
+
+        //2.测试字典
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        map.put("a", 1);
+        map.put("b", 2);
+        map.put("c", 3);
+        EvaluationContext context2 = new StandardEvaluationContext();
+        context2.setVariable("map", map);
+        Map<String, Integer> result2 = parser.parseExpression("#map.?[key!='a']").getValue(context2, Map.class);
+        result2.forEach((key, value) -> {
+            System.out.println(key + ":" + value);
+        });
+        System.out.println("------------");
+        List<Integer> result3 = parser.parseExpression("#map.?[key!='a'].![value+1]").getValue(context2, List.class);
+        System.out.println("result3 = " + result3);
+    }
+
+    @Test
+    public void test11() {
+        //创建解析器
+        SpelExpressionParser parser = new SpelExpressionParser();
+        //创建解析器上下文
+        ParserContext context = new TemplateParserContext("%{", "}");
+        Expression expression = parser.parseExpression("你好:%{#name},我们正在学习:%{#lesson}", context);
+
+        //创建表达式计算上下文
+        EvaluationContext evaluationContext = new StandardEvaluationContext();
+        evaluationContext.setVariable("name", "路人甲java");
+        evaluationContext.setVariable("lesson", "spring高手系列!");
+        //获取值
+        String value = expression.getValue(evaluationContext, String.class);
+        System.out.println(value);
+    }
 
     // @Test
     // public void test1() {

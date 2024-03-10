@@ -143,4 +143,37 @@ class RestTemplateConfigDemoApplicationTests {
 		System.err.println(exchange.getBody());
 	}
 
+	/**
+	 * 测试	private long timeToLive = 30L;
+	 *
+	 * @param
+	 * @return void
+	 * @date : 2023/5/14 1:56
+	 * @author : Nestor.Bian
+	 * @since : 1.0
+	 */
+	@Test
+	public void getMethodTest1() {
+		String result = restTemplate.getForObject("https://www.baidu.com/abc", String.class);
+		System.err.println(result);
+
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		String result1 = restTemplate.getForObject("https://www.baidu.com/abc", String.class);
+		System.err.println(result1);
+
+		// try {
+		// 	Thread.sleep(20000);
+		// } catch (InterruptedException e) {
+		// 	e.printStackTrace();
+		// }
+		//
+		// String result2 = restTemplate.getForObject("https://www.baidu.com/abc", String.class);
+		// System.err.println(result2);
+	}
+
 }

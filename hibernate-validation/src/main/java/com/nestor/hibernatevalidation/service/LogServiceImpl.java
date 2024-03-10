@@ -1,11 +1,13 @@
 package com.nestor.hibernatevalidation.service;
 
+import com.nestor.hibernatevalidation.dao.LogDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import javax.annotation.Resource;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author : Nestor.Bian
@@ -14,6 +16,9 @@ import java.util.Date;
  */
 @Service
 public class LogServiceImpl implements AbstractLogService {
+
+    @Resource
+    private LogDao logDao;
 
     @Override
     public void log(String str) {
@@ -28,16 +33,26 @@ public class LogServiceImpl implements AbstractLogService {
     }
 
     public static void main(String[] args) {
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSXXX").format(new Date()));
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSXX").format(new Date()));
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSX").format(new Date()));
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ").format(new Date()));
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZZ").format(new Date()));
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZZZ").format(new Date()));
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSz").format(new Date()));
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSzz").format(new Date()));
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSzzz").format(new Date()));
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSzzzz").format(new Date()));
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSzzzzzzzzz").format(new Date()));
+        // System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSXXX").format(new Date()));
+        // System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSXX").format(new Date()));
+        // System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSX").format(new Date()));
+        // System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ").format(new Date()));
+        // System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZZ").format(new Date()));
+        // System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZZZ").format(new Date()));
+        // System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSz").format(new Date()));
+        // System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSzz").format(new Date()));
+        // System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSzzz").format(new Date()));
+        // System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSzzzz").format(new Date()));
+        // System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSzzzzzzzzz").format(new Date()));
+        System.out.println(new Random().nextInt());
+        System.out.println(ThreadLocalRandom.current().nextInt());
+    }
+
+    public LogDao getLogDao() {
+        return logDao;
+    }
+
+    public void setLogDao(LogDao logDao) {
+        this.logDao = logDao;
     }
 }

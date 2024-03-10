@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * 年级controller
@@ -45,7 +43,7 @@ public class GradeParamController {
     }
 
     /**
-     * FetchSize需要与流水查询一起用才起作用
+     * FetchSize需要与流式查询一起用才起作用
      * 第二种流式查询：需要设置 fetchSize="-2147483648"
      * 不需要在url上加useCursorFetch=true
      * 如何判断是否生效：ResultSetImpl中的rowData的类型是否为ResultsetRowsStreaming

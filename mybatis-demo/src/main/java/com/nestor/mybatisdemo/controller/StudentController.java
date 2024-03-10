@@ -1,9 +1,12 @@
 package com.nestor.mybatisdemo.controller;
 
 import com.nestor.mybatisdemo.dto.StudentDTO;
+import com.nestor.mybatisdemo.enums.Sex;
 import com.nestor.mybatisdemo.po.Student;
 import com.nestor.mybatisdemo.service.StudentService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -13,6 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +32,7 @@ import java.util.List;
  * @date : 2020/4/9
  */
 @RestController
+@Slf4j
 public class StudentController {
 
     @Autowired
@@ -158,6 +168,135 @@ public class StudentController {
     public String deleteStudentSelective(@RequestParam(required = false) String name,
                                          @RequestParam(required = false) Integer age) {
         studentService.deleteStudentSelective(name, age);
+        return "SUCCESS";
+    }
+
+    /**
+     * 1W 耗时4326ms
+     * 加上rewriteBatchedStatements=true 1W 耗时1s
+     *
+     * 批量插入总结：
+     * batchInsert
+     *
+     * @param
+     * @return java.lang.String
+     * @date : 2023/7/2 23:42
+     * @author : Nestor.Bian
+     * @since : 1.0
+     */
+    @GetMapping("batchInsert")
+    public String batchInsert() {
+        List<Student> list = new ArrayList<>(10000);
+        for (int i = 0; i < 10000; i++) {
+            Student student = new Student();
+            student.setId(0L);
+            student.setName(String.valueOf(i));
+            student.setAge(0);
+            student.setSex(Sex.MALE);
+            student.setEnterScore(new BigDecimal("0"));
+            student.setSchoolId(0L);
+            list.add(student);
+        }
+        studentService.batchInsert(list);
+        return "SUCCESS";
+    }
+
+    /**
+     * 1W 耗时7528ms
+     *
+     * @param
+     * @return java.lang.String
+     * @date : 2023/7/2 23:44
+     * @author : Nestor.Bian
+     * @since : 1.0
+     */
+    @GetMapping("batchInsert2")
+    public String batchInsert2() {
+        List<Student> list = new ArrayList<>(10000);
+        for (int i = 0; i < 10000; i++) {
+            Student student = new Student();
+            student.setId(0L);
+            student.setName(String.valueOf(i));
+            student.setAge(0);
+            student.setSex(Sex.MALE);
+            student.setEnterScore(new BigDecimal("0"));
+            student.setSchoolId(0L);
+            list.add(student);
+        }
+        studentService.batchInsert2(list);
+        return "SUCCESS";
+    }
+
+    /**
+     * 1W 耗时978ms
+     *
+     * @param
+     * @return java.lang.String
+     * @date : 2023/7/2 23:44
+     * @author : Nestor.Bian
+     * @since : 1.0
+     */
+    @GetMapping("batchInsert3")
+    public String batchInsert3() {
+        List<Student> list = new ArrayList<>(10000);
+        for (int i = 0; i < 10000; i++) {
+            Student student = new Student();
+            student.setId(0L);
+            student.setName(String.valueOf(i));
+            student.setAge(0);
+            student.setSex(Sex.MALE);
+            student.setEnterScore(new BigDecimal("0"));
+            student.setSchoolId(0L);
+            list.add(student);
+        }
+        studentService.batchInsert3(list);
+        return "SUCCESS";
+    }
+
+    /**
+     * 1000条 55381ms
+     *
+     * @param
+     * @return java.lang.String
+     * @date : 2023/7/2 23:44
+     * @author : Nestor.Bian
+     * @since : 1.0
+     */
+    @GetMapping("batchInsert4")
+    public String batchInsert4() throws Exception {
+        List<Student> list = new ArrayList<>(10000);
+        for (int i = 0; i < 1000; i++) {
+            Student student = new Student();
+            student.setId(0L);
+            student.setName(String.valueOf(i));
+            student.setAge(0);
+            student.setSex(Sex.MALE);
+            student.setEnterScore(new BigDecimal("0"));
+            student.setSchoolId(0L);
+            list.add(student);
+        }
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mybatis-demo?serverTimezone=Asia" +
+                "/Shanghai&charEncoding=UTF-8", "root", "123456");
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO student ( id, name, age, sex, enter_score, school_id ) VALUES ( ?, ?, ?, ?, ?, ? )");
+        for (Student student : list) {
+            preparedStatement.clearParameters();
+            preparedStatement.setLong(1, student.getId());
+            preparedStatement.setString(2, student.getName());
+            preparedStatement.setInt(3, student.getAge());
+            preparedStatement.setString(4, student.getSex().getCode());
+            preparedStatement.setBigDecimal(5, student.getEnterScore());
+            preparedStatement.setLong(6, student.getSchoolId());
+            int i = preparedStatement.executeUpdate();
+        }
+
+        preparedStatement.close();
+        connection.close();
+
+        stopWatch.stop();
+        log.info("batchInsert4耗时[{}]ms", stopWatch.getTotalTimeMillis());
         return "SUCCESS";
     }
 }

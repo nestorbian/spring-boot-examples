@@ -43,16 +43,16 @@
 
     <resultMap id="SchoolResultMap" type="School">
         <id column="id" property="id" />
-        <result column="name" property="name" />
-        <result column="address" property="address" />
-        <result column="build_date" property="buildDate" />
-        <result column="description" property="description" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
+<!--        <result column="name" property="name" />-->
+<!--        <result column="address" property="address" />-->
+<!--        <result column="build_date" property="buildDate" />-->
+<!--        <result column="description" property="description" />-->
+<!--        <result column="create_time" property="createTime" />-->
+<!--        <result column="update_time" property="updateTime" />-->
     </resultMap>
 
     <select id="selectById" resultMap="SchoolResultMap">
-        select id, name, address, build_date, description, create_time, update_time from school where id = #{id,jdbcType=BIGINT}
+        select id, name, address, build_date, description, create_time, update_time from school where id = #{id}
     </select>
 
     <resultMap id="ConstructorResultMap" type="School">

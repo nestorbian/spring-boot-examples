@@ -46,4 +46,9 @@ public class SchoolServiceImpl implements SchoolService {
     public School selectByIdWithConstructor(Long id) {
         return schoolMapper.selectByIdWithConstructor(id);
     }
+
+    @Override
+    public School selectById(Long id) {
+        return schoolMapper.selectById(id);
+    }
 }

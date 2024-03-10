@@ -34,3 +34,6 @@ build/
 
 ### log ###
 /**/filePath_IS_UNDEFINED
+
+### plugin ###
+/**/rebel.xml

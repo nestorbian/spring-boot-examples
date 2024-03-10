@@ -1,10 +1,10 @@
 package com.nestor.mybatisdemo.service.impl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
+import com.nestor.mybatisdemo.aop.MyLog;
+import com.nestor.mybatisdemo.enums.GradeLevel;
+import com.nestor.mybatisdemo.mapper.GradeParamMapper;
+import com.nestor.mybatisdemo.po.GradeParam;
+import com.nestor.mybatisdemo.service.GradeParamService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.cursor.Cursor;
@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.nestor.mybatisdemo.enums.GradeLevel;
-import com.nestor.mybatisdemo.mapper.GradeParamMapper;
-import com.nestor.mybatisdemo.po.GradeParam;
-import com.nestor.mybatisdemo.service.GradeParamService;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 年级service
@@ -30,6 +30,7 @@ import com.nestor.mybatisdemo.service.GradeParamService;
  */
 @Service
 @Slf4j
+@MyLog
 public class GradeParamServiceImpl implements GradeParamService {
 
     @Autowired
@@ -74,6 +75,7 @@ public class GradeParamServiceImpl implements GradeParamService {
         @Override
         public void handleResult(ResultContext<? extends GradeParam> resultContext) {
             gradeParams.add(resultContext.getResultObject());
+            // TIPS 这里累积一定数量做批量插入
             size ++;
         }
 
